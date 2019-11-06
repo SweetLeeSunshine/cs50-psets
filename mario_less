@@ -1,0 +1,42 @@
+// Make mario half pyramid stairs
+#include <cs50.h>
+#include <stdio.h>
+
+int get_height(string prompt);
+
+int main(void)
+{
+    // Defines get user input for height 
+    int i = get_height("How high should the pyramid be (1-8)? ");
+}
+
+int get_height(string prompt)
+{
+    int n;
+    
+    do
+    {
+        // Gets user input as a prompt in n
+        n = get_int("%s", prompt);
+    }
+
+    // If user input not 1-8 ask again until it is correct
+    while (n < 1 || n > 8);
+
+    // Outer loop iteration for rows
+    for (int i = 0; i < n; i++)
+    {
+        // Inner loop for spaces in front of hashes
+        for (int j = i + 1; j < n; j++)
+        {
+            printf(" ");
+        }      
+        // Inner loop for columns 
+        for (int j = 0; j <= i; j++)
+        {
+            printf("#");
+        }
+        printf("\n");
+    }
+    return 0;
+}
