@@ -1,0 +1,55 @@
+// Greedy give change
+#include <cs50.h>
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    // Defines variable for float prompt
+    float change;
+    // Represents the number of times a coin is used (minimim coins)
+    int mcoins = 0;
+    
+    do
+    {
+        // Prompt user for change amount
+        change = get_float("How much change are you owed? ");
+    }
+    // If not <.01 reprompt until input is
+    while (change < .00);
+    
+    // Convert dollars to cents for accuracy + round to nearest penny
+    int cents = round(change * 100);
+
+    // While cents is greater or equal to 25 repeat the following 
+    while (cents >= 25)
+    {
+        // Add 1 to minimum coins (mcoins) each time 25 deducted
+        mcoins++;
+        // Deduct 25 from cents 
+        cents -= 25;
+    }
+
+    // Next minus 10 until >10, keep track of # of coins removed 
+    while (cents >= 10)
+    {
+        cents -= 10;
+        mcoins++;
+    }
+    
+    //Then deduct 05 until > 05, keep track of # of coins used
+    while (cents >= 05)
+    {
+        cents -= 05;
+        mcoins++;
+    }
+
+    // Last minus 01 until > 01, keep track of # of coins used
+    while (cents >= 01)
+    {
+        cents -= 01;
+        mcoins++;
+    }
+    //print minimum coins int followed by \n
+    printf("%i\n", mcoins);
+}
