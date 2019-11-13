@@ -1,0 +1,71 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+int i;
+int j;
+
+int main(int argc, string argv[])
+{
+    // Checks if is a single command-line argument
+    if (argc != 2)
+    {
+        printf("Usage: %s key\n", argv[0]);
+        
+        return 1;
+    }
+
+    int n = strlen(argv[1]);
+    
+    // Iterate through each characfer of key to next check validity
+    for (i = 0; i < n; i++) 
+    {
+        // Check if each char in key is not a number 
+        if (!(argv[1][i] >= '0' && argv[1][i] <= '9'))
+        {
+            printf("Usage: %s key\n", argv[0]);
+               
+            return 1;
+        }
+    }
+    // Convert string of key to int
+    int k = atoi(argv[1]);
+
+    // Get secret code as plaintext from user, store in p
+    string p = get_string("plaintext: ");
+
+    printf("ciphertext: ");    
+    
+    // Loop through plaintext iterating through chars to check them
+    for (i = 0; i < strlen(p); i++)
+    {   
+        // Checks if char is a valid letter A-Z || a-z
+        if (isalpha(p[i]))
+        {
+            // Checks if char is upper case 
+            if (isupper(p[i]))
+            {
+                // Use modulo remainder to print enciphered letter
+                printf("%c", 'A' + (p[i] - 'A' + k) % 26);
+            }
+            // Checks if char is lowercase
+            else if (islower(p[i]))
+            {
+                // Print enciphered letter
+                printf("%c", 'a' + (p[i] - 'a' + k) % 26);
+            }
+        }
+        else
+        {
+            // Print cipher text
+            printf("%c", p[i]);
+        }
+    }
+    // New line before return as per pset requirement
+    printf("\n");
+    
+    return 0;
+    
+}
