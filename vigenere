@@ -1,0 +1,141 @@
+/* Vigenere
+ Uses caesar cipher as a base to create vigenere which uses a multi-
+ char key including spaces and special characters to encipher
+ plaintext instead of numbers. 
+ 
+Terri Brunner
+CS50 - 2019
+*/
+#include <cs50.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+// Declare shift function
+int shift(char c);
+//Declare new shift function
+char encrypt(char c, int key);
+// Declare counter for iteration over plaintext
+int i;
+// Declare counter for iteration over the keyword *not working!*
+int j;
+// Declare variable for string lenth of plaintext
+int p_len;
+
+
+int main(int argc, string argv[])
+{
+    string key;
+    // Is keyword a single command-line argument? If not equal to 2
+    // print usage statement and end program by returning 1.
+    if (argc != 2)
+    {
+        printf("Usage: %s keyword\n", argv[0]);
+        
+        return 1;
+    }
+    // Get string length of the keyword + store in klen
+    int klen = strlen(argv[1]);
+    
+    // Iterate through each character of keyword to next check
+    // validity
+    for (i = 0; i < klen; i++) 
+    {
+        // Is a char in keyword a number or not alphabetic (for
+        // special characters). If true print usage statement + end
+        // program.
+        if ((argv[1][i] >= '0' && argv[1][i] <= '9') ||
+            !isalpha(argv[1][i]))
+        {
+            printf("Usage: %s keyword\n", argv[0]);
+               
+            return 1;
+        }
+    }
+    
+    key = (argv[1]);
+   
+    // Declare variable for shifted key function
+    int shiftedk;
+   
+    // Get secret code as plaintext from user via prompt. Store in
+    // variable p
+    string p = get_string("plaintext: ");
+    
+    printf("ciphertext: ");    
+    
+    // Loop through plaintext iterating through chars using the i as
+    // a counter, define variable p_len as string length of
+    // plaintext (p). Set j counter to 0.
+    // If the plaintext iteration counter (i) is less than the
+    // string length of plaintext (p_len) then loop again.
+    for (i = 0, j = 0,  p_len = strlen(p); i < p_len; i++)
+    {
+        // Is i'th char of plaintext a "letter"?
+        if (isupper(p[i]) || islower(p[i]))
+        {
+            // Shift key each time j incriments mod the keylength 
+            shiftedk = shift(key[j % klen]);
+            // Incriment the counter j each time the loop is true
+            j++;
+        }
+        else
+        {
+            // Don't increment the j for spaces and special characters.
+            shiftedk = 0;
+        }
+        
+        printf("%c", encrypt(p[i], shiftedk));
+    }
+    // New line as per pset requirement
+    printf("\n");
+}
+
+// Defines a new shift function
+char encrypt(char c, int key)
+{
+    if (isupper(c))
+    {
+         // Takes char c and decreases amount by the 
+        // ASCII value for 'A' or -65  add that value to the 
+        // now value of key mod 26 for letters in the 
+        // alphabet, use that remainder and add 'A'.
+        c = ((c - 'A') + key) % 26 + 'A';
+        return c;
+    }
+     else if (islower(c))
+     {
+         // Calculate for lowercase using same logic as uppercase
+         c = ((c - 'a') + key) % 26 + 'a';
+         return c;
+     }
+     else
+     {
+         // Return unchanged to let spaces and
+         // special characters pass through without
+         // affecting the other chars
+         return c;
+     }
+}
+// Defines shift function
+int shift(char c)
+{
+    // Is ciphered text char (c) an uppercase letter?
+    if (isupper(c))
+    {
+        // Shift char c by - 'A' which is -65 to get the uppercase encrypted char and return value
+        return c - 'A';
+    }
+    else if (islower(c))
+    {
+        // Shift char by -'a' which is -97 to get the lowercase equivalent of encyphered char
+        return c - 'a';
+    }
+    else
+    { 
+        // Return with no change if it's not an upper or lower case letter to let spaces and 
+        //special characters pass through without change
+        return c;
+    }
+} 
