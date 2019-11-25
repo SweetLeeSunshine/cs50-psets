@@ -44,7 +44,7 @@ Padding = (4 - (3 * (RGBtriple is always 3)) % 4 ) % 4\
 Padding = (4 - (9 % 4) % 4\
 Padding = (4 -1) % 4\
 Padding = 3 % 4\
-Padding = 3\
+Padding = 3
 
 ## What does `fseek` do?
 
