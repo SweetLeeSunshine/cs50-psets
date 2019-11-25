@@ -38,13 +38,13 @@ It is the counter that holds the max number if items to be read. Since the progr
 
 ## What value does `copy.c` assign to `padding` if `bi.biWidth` is `3`?
 
-The answer is 3 /n
-Padding = (4 - (bi.biWidth * sizeof(RGBtriple)) % 4) % 4 /n
-Padding = (4 - (3 * (RGBtriple is always 3)) % 4 ) % 4 /n
-Padding = (4 - (9 % 4) % 4 /n
-Padding = (4 -1) % 4 /n
-Padding = 3 % 4 /n
-Padding = 3 /n
+The answer is 3\
+Padding = (4 - (bi.biWidth * sizeof(RGBtriple)) % 4) % 4\
+Padding = (4 - (3 * (RGBtriple is always 3)) % 4 ) % 4\
+Padding = (4 - (9 % 4) % 4\
+Padding = (4 -1) % 4\
+Padding = 3 % 4\
+Padding = 3\
 
 ## What does `fseek` do?
 
