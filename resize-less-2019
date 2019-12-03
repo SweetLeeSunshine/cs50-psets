@@ -1,0 +1,141 @@
+/* Resize (less comfortable)
+	Forensic analysis
+	This code resizes (in this case enlarges) a bmp by the number 
+	of times a user chooses and copies resized bmp to an output 
+	bmp file.
+	Make sure you are in the directory containing the resize.c, 
+	infile (.bmp), and the outfile (.bmp).
+	Usage: ./resize n infile outfile
+	n = number of times to enlarge the image
+	
+	Terri Brunner
+	CS50 2019
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "bmp.h"
+
+int main(int argc, char *argv[])
+{
+    // ensure proper usage
+    if (argc != 4)
+    {
+        fprintf(stderr, "Usage: resize n infile outfile\n");
+        return 1;
+    }
+
+    // Remember size to enlarge by
+    int n = atoi(argv[1]);
+
+    // Remember filenames
+    char *infile = argv[2];
+    char *outfile = argv[3];
+
+    // Open input file
+    FILE *inptr = fopen(infile, "r");
+    if (inptr == NULL)
+    {
+        fprintf(stderr, "Could not open %s.\n", infile);
+        return 2;
+    }
+
+    // Open output file
+    FILE *outptr = fopen(outfile, "w");
+    if (outptr == NULL)
+    {
+        fclose(inptr);
+        fprintf(stderr, "Could not create %s.\n", outfile);
+        return 3;
+    }
+
+    // Read infile's BITMAPFILEHEADER
+    BITMAPFILEHEADER bf;
+    fread(&bf, sizeof(BITMAPFILEHEADER), 1, inptr);
+
+    // Read infile's BITMAPINFOHEADER
+    BITMAPINFOHEADER bi;
+    fread(&bi, sizeof(BITMAPINFOHEADER), 1, inptr);
+
+    // Ensure infile is (likely) a 24-bit uncompressed BMP 4.0
+    if (bf.bfType != 0x4d42 || bf.bfOffBits != 54 || bi.biSize != 40 ||
+        bi.biBitCount != 24 || bi.biCompression != 0)
+    {
+        fclose(outptr);
+        fclose(inptr);
+        fprintf(stderr, "Unsupported file format.\n");
+        return 4;
+    }
+
+    // Determine width for headers
+    int inWidth = bi.biWidth;
+    int outWidth = inWidth * n;
+    
+    // Determine height for headers
+    int inHeight = bi.biHeight;
+    int outHeight = inHeight * n;
+	
+    // Determine padding
+    int inPadding = (4 - (inWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+    int outPadding = (4 - (outWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+
+    // Calculate outfile's headers info
+    bi.biHeight = outHeight;
+    bi.biWidth = outWidth;
+    bi.biSizeImage = ((sizeof(RGBTRIPLE) * outWidth) + outPadding) * abs(outHeight);
+    bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+    // Write outfile's BITMAPFILEHEADER
+    fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
+
+    // Write outfile's BITMAPINFOHEADER
+    fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
+
+    // Allocate memory to store scanline pixels on the stack
+    RGBTRIPLE sl[inWidth * sizeof(RGBTRIPLE)];
+
+    // Iterate over infile's scanlines (row) for height (sh)
+    for (int sh = 0, biHeight = abs(inHeight); sh < biHeight; sh++)
+    {
+        // Iterate over pixels in a scanline (row) for width (sw)
+        for (int sw= 0; sw< inWidth; sw++)
+        {
+            // Temporary storage
+            RGBTRIPLE triple;
+
+            // Read RGB triple from infile
+            fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+
+            // Add scanline to temp storage (as)
+            for (int as = 0; as < n; as++)
+            {
+                sl[(sw * n) + as] = triple;
+            }
+        }
+
+        // Skip over padding, if any
+        fseek(inptr, inPadding, SEEK_CUR);
+
+        // Write the pixel by pixel for outfile's scanline n times (pbyp)
+        for (int pbyp = 0; pbyp< n; pbyp++)
+        {
+            // Write enlarged scanline 
+            fwrite(sl, sizeof(RGBTRIPLE), outWidth, outptr);
+
+            // Write outfile's padding (wp)
+            for (int wp = 0; wp < outPadding; wp++)
+            {
+                fputc(0x00, outptr);
+            }
+        }
+    }
+
+    // close infile
+    fclose(inptr);
+
+    // close outfile
+    fclose(outptr);
+
+    // success
+    return 0;
+}
