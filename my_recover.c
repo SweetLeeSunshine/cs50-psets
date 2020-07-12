@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 
 			// Check if contains new signature, stop writing 
 			// Or rather if no new signature is found write next block
-			to same newjpg file
+			// to same newjpg file
 			if (sigsearch = false)
 			{
 				// Write another 512B block to new jpg file
