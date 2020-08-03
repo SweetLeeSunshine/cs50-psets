@@ -177,7 +177,7 @@ th {
 	font-size: 18px;
 	font-weight: normal;
   padding: 10px;
-  background: #232323;
+  background: #EAC0C0;
   color: #FDFEFB;
  }
 
@@ -246,13 +246,13 @@ header ul {
 
 header li {
 	list-style-type: none;
-  width:132px;
+  width:100px;
   height:15px;
 	margin-bottom: 12px;
 	line-height: 1em;
 	padding: 6px 6px 6px 7px;
 
-	background: #AF0011;
+	background: #EAC0C0;
 	background: -moz-linear-gradient(top, #AF0011 0%, #820011 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#dddddd));
   background: -webkit-linear-gradient(top, #AF0011 0%,#820011 100%);
@@ -336,7 +336,7 @@ footer {
 	}
 
   header {
-    padding-right:320px;
+    padding-right:300px;
   }
 
   section {
